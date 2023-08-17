@@ -157,6 +157,12 @@ jobs:
             -   name: Create the default Conan profile
                 run:  conan profile new default --detect
 
+            -   name: Use LLVM Clang on MacOS
+                if: ${{ runner.os == 'Macos' }}
+                run: |
+                    conan profile update settings.compiler=clang default
+                    conan profile update settings.compiler.version=15 default
+
             -   name: Configure GPG Key Linux (Bash)
                 if: ${{ runner.os == 'Linux' }}
                 run: echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
@@ -195,12 +201,20 @@ jobs:
                 if: ${{ inputs.conan_config != '' }}
                 run: conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ inputs.conan_config }}"
 
-            -   name: Get Conan configuration
-                if: ${{ inputs.conan_config == '' }}
+            -   name: Get Conan configuration Linux / Windows
+                if: ${{ inputs.conan_config == '' && runner.os != 'Macos' }}
                 run: conan config install https://github.com/Ultimaker/conan-config.git
 
-            -   name: Create the Packages (Bash)
-                if: ${{ runner.os != 'Windows' }}
+            -   name: Get Conan configuration Macos
+                if: ${{ inputs.conan_config == '' && runner.os == 'Macos' }}
+                run: conan config install https://github.com/Ultimaker/conan-config.git -a "-b runner/macos/x86_64"
+
+            -   name: Create the Packages Macos (Bash)
+                if: ${{ runner.os == 'Macos' }}
+                run: CLANG_BIN_PATH=$(brew --prefix llvm@15) conan install $CURA_CONAN_VERSION ${{ inputs.conan_args }} --build=missing --update -if cura_inst -g VirtualPythonEnv -o cura:enterprise=$ENTERPRISE -o cura:staging=$STAGING --json "cura_inst/conan_install_info.json"
+
+            -   name: Create the Packages Linux (Bash)
+                if: ${{ runner.os == 'Linux' }}
                 run: conan install $CURA_CONAN_VERSION ${{ inputs.conan_args }} --build=missing --update -if cura_inst -g VirtualPythonEnv -o cura:enterprise=$ENTERPRISE -o cura:staging=$STAGING --json "cura_inst/conan_install_info.json"
 
             -   name: Create the Packages (Powershell)
