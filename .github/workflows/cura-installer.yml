@@ -211,7 +211,7 @@ jobs:
 
             -   name: Create the Packages Macos (Bash)
                 if: ${{ runner.os == 'Macos' }}
-                run: CLANG_BIN_PATH=$(brew --prefix llvm@15) conan install $CURA_CONAN_VERSION ${{ inputs.conan_args }} --build=missing --update -if cura_inst -g VirtualPythonEnv -o cura:enterprise=$ENTERPRISE -o cura:staging=$STAGING --json "cura_inst/conan_install_info.json"
+                run: BREW_CLANG=$(brew --prefix llvm@15) conan install $CURA_CONAN_VERSION ${{ inputs.conan_args }} --build=missing --update -if cura_inst -g VirtualPythonEnv -o cura:enterprise=$ENTERPRISE -o cura:staging=$STAGING --json "cura_inst/conan_install_info.json"
 
             -   name: Create the Packages Linux (Bash)
                 if: ${{ runner.os == 'Linux' }}
