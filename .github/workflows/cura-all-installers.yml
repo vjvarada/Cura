@@ -79,7 +79,7 @@ jobs:
         if: ${{ inputs.build_windows_msi }}
         uses: ./.github/workflows/cura-installer.yml
         with:
-            platform: 'windows-2022'
+            platform: 'self-hosted'
             os_name: 'win64'
             cura_conan_version: ${{ inputs.cura_conan_version }}
             conan_args: ${{ inputs.conan_args }}
