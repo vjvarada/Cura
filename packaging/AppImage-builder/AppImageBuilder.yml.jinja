@@ -46,12 +46,6 @@ AppDir:
         stable main
     - sourceline: deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie
         main
-    include:
-      - xdg-desktop-portal-kde
-    exclude:
-      - hicolor-icon-theme
-      - adwaita-icon-theme
-      - humanity-icon-theme
   files:
     include: []
     exclude:
@@ -66,7 +60,6 @@ AppDir:
       PYTHONPATH: "$APPDIR"
       QT_PLUGIN_PATH: "$APPDIR/qt/plugins"
       QML2_IMPORT_PATH: "$APPDIR/qt/qml"
-      QT_QPA_PLATFORMTHEME: xdgdesktopportal
   test:
     fedora-30:
       image: appimagecrafters/tests-env:fedora-30
