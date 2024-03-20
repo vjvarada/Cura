@@ -50,19 +50,20 @@ ScrollView
         RecommendedQualityProfileSelector
         {
             width: parent.width
-            hasQualityOptions: recommendedResolutionSelector.visible
+            hasQualityOptions: recommendedResolutionSelector.visible && Cura.MachineManager.isActiveQualitySupported
         }
 
         RecommendedResolutionSelector
         {
             id: recommendedResolutionSelector
+            visible : Cura.MachineManager.isActiveQualitySupported
             width: parent.width
         }
 
         UnsupportedProfileIndication
         {
             width: parent.width
-            visible: !recommendedResolutionSelector.visible
+            visible: !recommendedResolutionSelector.visible || !Cura.MachineManager.isActiveQualitySupported
         }
 
         Item { height: UM.Theme.getSize("default_margin").height } // Spacer
@@ -128,6 +129,12 @@ ScrollView
             RecommendedAdhesionSelector
             {
                 width: parent.width
+            }
+
+            RecommendedFlexibleBuildPlateSelector
+            {
+                width: parent.width
+                visible: Cura.MachineManager.hasFlexibleBed  && (Cura.MachineManager.activeMachine.definition.name == "Epsilon W50" || Cura.MachineManager.activeMachine.definition.name == "Epsilon W27" || Cura.MachineManager.activeMachine.definition.name == "Sigma D25")
             }
         }
     }

@@ -360,6 +360,39 @@ UM.PreferencesPage
 
             }
 
+
+            Item
+            {
+                //: Spacer
+                height: UM.Theme.getSize("default_margin").height
+                width: UM.Theme.getSize("default_margin").width
+            }
+
+             UM.Label
+            {
+                id: contactUs                
+                text: catalog.i18nc("@label", "Request Omega Open Filament License (OOFL) to personalize print settings and/or to print with third-party filaments:")
+                wrapMode: Text.WordWrap
+                font.italic: true
+
+            }
+
+           Cura.TertiaryButton
+            {
+                id: contacButton
+                anchors
+                {
+                    top: contactUs.right
+                }
+                width: UM.Theme.getSize("account_button").width
+                height: UM.Theme.getSize("account_button").height
+                iconSource: UM.Theme.getIcon("LinkExternal")
+                text: catalog.i18nc("@button", "Request OOFL")
+                onClicked: Qt.openUrlExternally("https://3d.bcn3d.com/bcn3d-omega-i60-omega-open-filament-license")
+                fixedWidthMode: false
+            }
+
+
             Item
             {
                 //: Spacer
@@ -839,6 +872,20 @@ UM.PreferencesPage
                             return index;
                         }
                         onActivated: UM.Preferences.setValue("cura/choice_on_profile_override", model.get(index).code)
+                    }
+                    UM.TooltipArea
+                    {
+                        width: childrenRect.width
+                        height: childrenRect.height
+                        text: catalog.i18nc("@info:tooltip","Check material compatibility between materials, if the materials do not match, a warning will be displayed and our configuration of these cannot be used")
+
+                        UM.CheckBox
+                        {
+                            id: selectModelsOnLoadCheckboxaa
+                            text: catalog.i18nc("@option:check","Check material compatibility")
+                            checked: boolCheck(UM.Preferences.getValue("cura/check_material_compatibility"))
+                            onCheckedChanged: UM.Preferences.setValue("cura/check_material_compatibility", checked)
+                        }
                     }
                 }
             }

@@ -34,6 +34,7 @@ from cura.Settings.ExtruderManager import ExtruderManager
 from PyQt6.QtCore import QTimer
 
 
+
 if TYPE_CHECKING:
     from cura.CuraApplication import CuraApplication
     from cura.Settings.ExtruderStack import ExtruderStack
@@ -300,6 +301,10 @@ class BuildVolume(SceneNode):
                     continue
 
                 node.setOutsideBuildArea(False)
+                
+        #BCN3D IDEX INCLUSION
+        from cura.Utils.BCN3Dutils.Bcn3dIdexSupport import updateNodeBoundaryCheckForDuplicated
+        updateNodeBoundaryCheckForDuplicated() 
 
         # Group nodes should override the _outside_buildarea property of their children.
         for group_node in group_nodes:

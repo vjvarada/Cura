@@ -76,6 +76,10 @@ class MultiplyObjectsJob(Job):
         found_solution_for_all = True
         group_operation = GroupedOperation()
         if nodes:
+            #BCN3D IDEX INCLUSION
+            from cura.Utils.BCN3Dutils.Bcn3dIdexSupport import idexMultiplyObjectsJob
+            group_operation = idexMultiplyObjectsJob(group_operation, nodes, scene)
+
             group_operation, not_fit_count = createGroupOperationForArrange(nodes,
                                                                             Application.getInstance().getBuildVolume(),
                                                                             fixed_nodes,

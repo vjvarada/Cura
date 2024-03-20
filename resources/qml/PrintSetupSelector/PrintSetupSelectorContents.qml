@@ -42,6 +42,9 @@ Item
         return PrintSetupSelectorContents.Mode.Recommended
     }
     onCurrentModeIndexChanged: UM.Preferences.setValue("cura/active_mode", currentModeIndex)
+    
+    property var machineSet: Cura.MachineManager.activeMachine
+    onMachineSetChanged : currentModeIndex = 0
 
     Item
     {
@@ -66,7 +69,7 @@ Item
                 right: parent.right
                 top: parent.top
             }
-            visible: currentModeIndex == PrintSetupSelectorContents.Mode.Recommended
+            visible: (currentModeIndex == PrintSetupSelectorContents.Mode.Recommended) && Cura.MachineManager.activeMachine.definition.name != "Omega I60"
             height: {
                 const height = base.height - (recommendedPrintSetup.mapToItem(null, 0, 0).y + buttonRow.height + UM.Theme.getSize("default_margin").height);
                 const maxHeight = UM.Preferences.getValue("view/settings_list_height");
@@ -87,6 +90,47 @@ Item
                     const maxHeight = UM.Preferences.getValue("view/settings_list_height");
 
                     recommendedPrintSetup.height = Math.min(maxHeight, height);
+
+                    updateDragPosition();
+                }
+            }
+
+            function onModeChanged()
+            {
+                currentModeIndex = PrintSetupSelectorContents.Mode.Custom;
+            }
+        }
+
+        RecommendedOmegaPrintSetup
+        {
+            id: recommendedOmegaPrintSetup
+            anchors
+            {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+            }
+            visible:  (currentModeIndex == PrintSetupSelectorContents.Mode.Recommended) && Cura.MachineManager.activeMachine.definition.name == "Omega I60"
+            height: {
+                const height = base.height - (recommendedOmegaPrintSetup.mapToItem(null, 0, 0).y + buttonRow.height + UM.Theme.getSize("default_margin").height);
+                const maxHeight = UM.Preferences.getValue("view/settings_list_height");
+                return Math.min(height, maxHeight);
+            }
+
+            Connections
+            {
+                target: UM.Preferences
+                function onPreferenceChanged(preference)
+                {
+                    if (preference !== "view/settings_list_height" && preference !== "general/window_height" && preference !== "general/window_state")
+                    {
+                        return;
+                    }
+
+                    const height = base.height - (recommendedOmegaPrintSetup.mapToItem(null, 0, 0).y + buttonRow.height + UM.Theme.getSize("default_margin").height);
+                    const maxHeight = UM.Preferences.getValue("view/settings_list_height");
+
+                    recommendedOmegaPrintSetup.height = Math.min(maxHeight, height);
 
                     updateDragPosition();
                 }

@@ -165,10 +165,11 @@ class MachineManager(QObject):
                 self.numUserSettingsChanged.emit()
                 self._num_user_settings = 0
             return
-        num_user_settings = self._global_container_stack.getTop().getNumInstances()
+        from cura.Utils.BCN3Dutils.Bcn3dExcludeInstances import countNonExcludedInstances
+        num_user_settings = countNonExcludedInstances(self._global_container_stack.getTop())
         stacks = self._global_container_stack.extruderList
         for stack in stacks:
-            num_user_settings += stack.getTop().getNumInstances()
+            num_user_settings += countNonExcludedInstances(stack.getTop())
 
         if self._num_user_settings != num_user_settings:
             self._num_user_settings = num_user_settings
@@ -473,6 +474,22 @@ class MachineManager(QObject):
     def numUserSettings(self) -> int:
         return self._num_user_settings
 
+    @pyqtProperty(bool, notify = activeMaterialChanged)
+    def hasFlexibleBed(self) -> bool:
+
+        if self._active_container_stack is None or self._global_container_stack is None:
+            return True
+
+        from UM.Application import Application
+        um_application = Application.getInstance()
+        cura_formula_functions = um_application.getCuraFormulaFunctions()
+        extrusor0type = cura_formula_functions.getValueInExtruder(0, "machine_nozzle_type")
+        extrusor1rype = cura_formula_functions.getValueInExtruder(1, "machine_nozzle_type")
+        flexibleBed = True
+        if (extrusor0type == "M" or extrusor1rype == "M"):
+            flexibleBed = False
+        return flexibleBed
+
     @pyqtSlot(str)
     def clearUserSettingAllCurrentStacks(self, key: str) -> None:
         """Delete a user setting from the global stack and all extruder stacks.
@@ -639,6 +656,9 @@ class MachineManager(QObject):
         active_quality_group = self.activeQualityGroup()
         if active_quality_group is None:
             return False
+        #BCN3D inclusion
+        from cura.Utils.BCN3Dutils.Bcn3dUtils import checkMaterialcompatibility
+        return checkMaterialcompatibility(active_quality_group, global_container_stack)
         return active_quality_group.is_available
 
 
@@ -1274,6 +1294,10 @@ class MachineManager(QObject):
         if global_stack is None:
             return
         Logger.log("d", "Updating quality/quality_changes due to material change")
+        
+        #from cura.Utils.BCN3Dutils.Bcn3dUtils import resetDefaultQualityIfNecessary
+        #resetDefaultQualityIfNecessary(self.activeMachine.definition.name, self.resetToUseDefaultQuality)
+        
         current_quality_type = global_stack.quality.getMetaDataEntry("quality_type")
         candidate_quality_groups = ContainerTree.getInstance().getCurrentQualityGroups()
         available_quality_types = {qt for qt, g in candidate_quality_groups.items() if g.is_available}

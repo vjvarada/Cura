@@ -42,14 +42,14 @@ class CuraConan(ConanFile):
         "staging": "False",
         "devtools": False,
         "cloud_api_version": "1",
-        "display_name": "UltiMaker Cura",
+        "display_name": "BCN3D Stratos",
         "cura_debug_mode": False,  # Not yet implemented
         "internal": False,
     }
 
     def set_version(self):
         if not self.version:
-            self.version = "5.4.0-beta.2"
+            self.version = "2.0.0"
 
     @property
     def _pycharm_targets(self):

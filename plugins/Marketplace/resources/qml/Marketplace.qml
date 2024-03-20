@@ -290,14 +290,14 @@ Window
     {
         color: UM.Theme.getColor("main_background")
         anchors.fill: parent
-        visible: !Cura.API.account.isLoggedIn && CuraApplication.isEnterprise
+        visible: !Cura.APIManager.AuthenticationService.isLoggedIn && CuraApplication.isEnterprise
 
         UM.Label
         {
             id: signInLabel
             anchors.centerIn: parent
             width: Math.round(UM.Theme.getSize("modal_window_minimum").width / 2.5)
-            text: catalog.i18nc("@description","Please sign in to get verified plugins and materials for UltiMaker Cura Enterprise")
+            text: catalog.i18nc("@description","Please sign in to get verified plugins and materials for BCN3D Stratos Enterprise")
             horizontalAlignment: Text.AlignHCenter
         }
 
@@ -311,7 +311,7 @@ Window
             anchors.topMargin: UM.Theme.getSize("default_margin").height * 2
             text: catalog.i18nc("@button", "Sign in")
             fixedWidthMode: true
-            onClicked: Cura.API.account.login()
+            onClicked: Cura.APIManager.AuthenticationService.login()
         }
     }
 }

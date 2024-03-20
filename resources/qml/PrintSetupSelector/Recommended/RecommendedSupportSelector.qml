@@ -28,7 +28,7 @@ RecommendedSettingSection
     property UM.SettingPropertyProvider supportEnabled: UM.SettingPropertyProvider
     {
         id: supportEnabled
-        containerStack: Cura.MachineManager.activeMachine
+        containerStack: Cura.MachineManager.activeStack
         key: "support_enable"
         watchedProperties: [ "value", "enabled", "description" ]
         storeIndex: 0

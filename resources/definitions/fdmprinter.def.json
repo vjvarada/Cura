@@ -208,8 +208,8 @@
                 },
                 "machine_heated_build_volume":
                 {
-                    "label": "Has Build Volume Temperature Stabilization",
-                    "description": "Whether the machine is able to stabilize the build volume temperature.",
+                    "label": "Has Heated Chamber Temperature Stabilization",
+                    "description": "Whether the machine is able to stabilize the heated chamber temperature.",
                     "default_value": false,
                     "type": "bool",
                     "settable_per_mesh": false,
@@ -1997,6 +1997,19 @@
                     "settable_globally": true,
                     "enabled": "extruders_enabled_count > 1"
                 },
+                "original_infill_sparse_density":
+                {
+                    "label": "Original Infill Density",
+                    "description": "Adjusts the density of infill of the print.",
+                    "unit": "%",
+                    "type": "float",
+                    "default_value": 20,
+                    "minimum_value": "0",
+                    "maximum_value_warning": "100",
+                    "limit_to_extruder": "infill_extruder_nr",
+                    "settable_per_mesh": false,
+                    "enabled" : false
+                },
                 "infill_sparse_density":
                 {
                     "label": "Infill Density",
@@ -2411,15 +2424,15 @@
                 },
                 "build_volume_temperature":
                 {
-                    "label": "Build Volume Temperature",
-                    "description": "The temperature of the environment to print in. If this is 0, the build volume temperature will not be adjusted.",
+                    "label": "Heated Chamber Temperature",
+                    "description": "The temperature of the environment to print in. If this is 0, the heated chamber temperature will not be adjusted.",
                     "unit": "\u00b0C",
                     "type": "float",
                     "default_value": 0,
                     "resolve": "min(extruderValues('build_volume_temperature'))",
                     "minimum_value": "-273.15",
                     "minimum_value_warning": "0",
-                    "maximum_value_warning": "285",
+                    "maximum_value": "70",
                     "enabled": "machine_heated_build_volume",
                     "settable_per_mesh": false,
                     "settable_per_extruder": false
